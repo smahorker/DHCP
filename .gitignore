@@ -55,6 +55,7 @@ Thumbs.db
 
 # Project specific
 .claude/
+docs/
 
 # Docker
 docker-compose.override.yml

@@ -53,7 +53,6 @@ Network/
 │   └── database/
 │       └── init_new_schema.sql  # Database schema
 ├── tests/               # Comprehensive test suite
-├── docs/                # Complete documentation
 └── docker-compose.yml   # PostgreSQL container
 ```
 
@@ -169,10 +168,7 @@ FINGERBANK_API_KEY=your_api_key_here
 
 ## 📚 Documentation
 
-- **[docs/API_GUIDE.md](docs/API_GUIDE.md)** - Complete REST API documentation
-- **[docs/COMPLETE_SYSTEM_OVERVIEW.md](docs/COMPLETE_SYSTEM_OVERVIEW.md)** - Full system documentation
-- **[docs/SETUP_STATUS.md](docs/SETUP_STATUS.md)** - Setup and configuration status
-- **[docs/FINAL_STATUS.md](docs/FINAL_STATUS.md)** - Final implementation status
+All comprehensive documentation is available locally in the `docs/` directory when you clone the repository.
 
 ## 🎯 Use Cases
 
@@ -214,6 +210,6 @@ The project is organized for easy development:
 
 ## 📞 Support
 
-- **Setup Issues**: Check `docs/SETUP_STATUS.md`
-- **API Questions**: See `docs/API_GUIDE.md`
 - **System Testing**: Run `python run_tests.py`
+- **Setup Issues**: Check local documentation in `docs/` directory
+- **API Questions**: See local API guide in `docs/` directory
