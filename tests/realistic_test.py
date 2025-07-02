@@ -10,7 +10,7 @@ from pathlib import Path
 from datetime import datetime
 import sys
 sys.path.append('..')
-from dhcp_device_analyzer import OptimizedDHCPDeviceAnalyzer, DeviceClassificationResult
+from src.core.dhcp_device_analyzer import OptimizedDHCPDeviceAnalyzer, DeviceClassificationResult
 
 # Configure logging to see detailed output
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

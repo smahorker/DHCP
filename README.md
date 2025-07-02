@@ -57,21 +57,22 @@ python3 tests/simple_test.py
 
 ```
 Network/
-├── dhcp_device_analyzer.py    # Main classification engine
-├── enhanced_classifier.py     # Local fallback classifier
-├── requirements.txt           # Python dependencies
-├── README.md                 # This file
-├── src/                      # Core modules
+├── analyze.py               # Main entry point
+├── requirements.txt         # Python dependencies
+├── README.md               # This file
+├── src/                    # Core modules
 │   └── core/
-│       ├── dhcp_log_parser.py
-│       ├── fingerbank_api.py
-│       ├── mac_vendor_lookup.py
-│       └── oui_database.csv
-├── test_logs/               # Sample DHCP logs
-├── docs/                    # Documentation
-├── tests/                   # Test scripts
-├── tools/                   # Utility tools
-└── results/                 # Output files
+│       ├── dhcp_device_analyzer.py    # Main classification engine
+│       ├── enhanced_classifier.py     # Local fallback classifier
+│       ├── dhcp_log_parser.py         # DHCP log parsing
+│       ├── fingerbank_api.py          # Fingerbank API client
+│       ├── mac_vendor_lookup.py       # MAC vendor database
+│       └── oui_database.csv           # IEEE OUI database
+├── test_logs/              # Sample DHCP logs
+├── docs/                   # Documentation
+├── tests/                  # Test scripts
+├── tools/                  # Utility tools
+└── results/                # Output files
 ```
 
 ## System Architecture

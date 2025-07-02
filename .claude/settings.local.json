@@ -23,7 +23,8 @@
       "Bash(python:*)",
       "Bash(jq:*)",
       "Bash(cp:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(/dev/null)"
     ],
     "deny": []
   }

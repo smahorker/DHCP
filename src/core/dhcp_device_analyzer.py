@@ -13,10 +13,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 # Import core components
-from src.core.dhcp_log_parser import DHCPLogParser, DHCPLogEntry
-from src.core.mac_vendor_lookup import MACVendorLookup
-from src.core.fingerbank_api import FingerbankAPIClient, DeviceFingerprint
-from enhanced_classifier import EnhancedFallbackClassifier
+from .dhcp_log_parser import DHCPLogParser, DHCPLogEntry
+from .mac_vendor_lookup import MACVendorLookup
+from .fingerbank_api import FingerbankAPIClient, DeviceFingerprint
+from .enhanced_classifier import EnhancedFallbackClassifier
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

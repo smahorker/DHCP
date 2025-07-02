@@ -18,7 +18,7 @@ logging.getLogger().setLevel(logging.CRITICAL)
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
-    from dhcp_device_analyzer import OptimizedDHCPDeviceAnalyzer
+    from src.core.dhcp_device_analyzer import OptimizedDHCPDeviceAnalyzer
 except ImportError:
     print("Error: Could not import DHCP Device Analyzer")
     sys.exit(1)
