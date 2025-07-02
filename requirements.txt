@@ -1,0 +1,14 @@
+# DHCP Device Analyzer Requirements
+# Core dependencies for maximum accuracy device classification
+
+# HTTP requests for Fingerbank API
+requests>=2.25.0
+
+# Environment variable management
+python-dotenv>=0.19.0
+
+# Optional: Database support (if using database features)
+# psycopg2-binary>=2.9.0
+
+# Note: No additional dependencies required for core functionality
+# System uses built-in Python libraries for log parsing and OUI lookup

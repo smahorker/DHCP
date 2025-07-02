@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "timestamp": "2025-07-01T11:35:35.709946",
+    "total_devices": 0,
+    "analyzer_version": "3.0",
+    "statistics": {
+      "total_devices_processed": 0,
+      "classification_methods": {
+        "fingerbank_success": 0,
+        "dhcp_fingerprint_success": 0,
+        "fallback_success": 0,
+        "vendor_lookup_success": 0
+      },
+      "dhcp_parser": {
+        "parsed_entries": 0,
+        "parse_errors": 8,
+        "skipped_lines": 0,
+        "total_processed": 8,
+        "success_rate": 0.0
+      },
+      "vendor_lookup": {
+        "total_lookups": 0,
+        "successful_lookups": 0,
+        "cache_hits": 0,
+        "success_rate": 0,
+        "database_size": 37594,
+        "last_updated": "2025-06-25T16:48:28.341737"
+      },
+      "fingerbank_api": {
+        "total_requests": 0,
+        "successful_requests": 0,
+        "failed_requests": 0,
+        "rate_limited_requests": 0,
+        "success_rate": 0,
+        "rate_limit_status": {
+          "hourly_used": 0,
+          "hourly_limit": 100,
+          "daily_used": 0,
+          "daily_limit": 1000,
+          "can_request": true,
+          "wait_time_seconds": 0
+        }
+      }
+    }
+  },
+  "devices": []
+}

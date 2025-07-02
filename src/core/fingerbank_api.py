@@ -16,8 +16,8 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from dotenv import load_dotenv
-from .database import get_classification_store, get_device_store
-from .dhcp_parser import DeviceFingerprint
+# Database imports removed - system now operates without database dependency
+# DeviceFingerprint moved to this file since dhcp_parser was removed
 
 # Load environment variables
 load_dotenv()
@@ -25,6 +25,39 @@ load_dotenv()
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+@dataclass
+class DeviceFingerprint:
+    """Enhanced device fingerprint data for Fingerbank API v2."""
+    mac_address: str
+    
+    # DHCP Options
+    dhcp_fingerprint: Optional[str] = None  # Option 55: Parameter Request List
+    dhcp6_fingerprint: Optional[str] = None  # DHCPv6 fingerprint
+    dhcp_vendor_class: Optional[str] = None  # Option 60: Vendor Class Identifier
+    dhcp6_enterprise: Optional[str] = None  # DHCPv6 enterprise
+    hostname: Optional[str] = None  # Option 12: Hostname
+    client_fqdn: Optional[str] = None  # Option 81: Client FQDN
+    
+    # Network Traffic Patterns
+    user_agents: Optional[List[str]] = None  # HTTP User-Agent headers
+    destination_hosts: Optional[List[str]] = None  # Domains contacted
+    
+    # Advanced Fingerprinting
+    tcp_syn_signatures: Optional[List[str]] = None  # TCP SYN fingerprints
+    ja3_fingerprints: Optional[List[str]] = None  # JA3 TLS fingerprints
+    ja3_data: Optional[Dict] = None  # JA3+JA3s with host:port
+    
+    # UPnP and mDNS
+    upnp_user_agents: Optional[List[str]] = None  # UPnP USER-AGENT headers
+    upnp_server_strings: Optional[List[str]] = None  # UPnP SERVER headers
+    mdns_services: Optional[List[str]] = None  # mDNS service advertisements
+    
+    # HTTP Client Hints
+    client_hints: Optional[Dict] = None  # sec-ch-ua headers
+    
+    # Additional data for internal use
+    vendor_specific_options: Dict = None
 
 class APIRateLimit:
     """Rate limiting for Fingerbank Community API."""
@@ -102,12 +135,35 @@ class APIRateLimit:
 
 @dataclass
 class DeviceClassification:
-    """Device classification result from Fingerbank API."""
+    """Enhanced device classification result from Fingerbank API v2."""
+    # Core device information
     fingerbank_device_id: Optional[int] = None
-    device_name: Optional[str] = None
+    device_name: Optional[str] = None  # Full hierarchy path
     device_type: Optional[str] = None
+    
+    # Operating system details
     operating_system: Optional[str] = None
+    operating_system_id: Optional[int] = None
+    version: Optional[str] = None  # Specific version (e.g., "11.0.1" for iOS)
+    
+    # Manufacturer information
+    manufacturer: Optional[str] = None
+    manufacturer_id: Optional[int] = None
+    
+    # Device hierarchy and relationships
+    device_hierarchy: Optional[List[str]] = None  # Parent device chain
+    parent_device_id: Optional[int] = None
+    
+    # Confidence and scoring
     confidence_score: Optional[int] = None
+    confidence_level: Optional[str] = None  # very_low, moderate, high, very_high
+    can_be_more_precise: Optional[bool] = None
+    
+    # Additional metadata
+    request_id: Optional[str] = None
+    vulnerabilities: Optional[Dict] = None  # CVE information if available
+    
+    # Response tracking
     raw_response: Dict = None
     error_message: Optional[str] = None
 
@@ -170,12 +226,16 @@ class FingerbankAPIClient:
             'key': self.api_key
         }
         
+        # Add MAC address (critical for maximum accuracy)
+        if fingerprint.mac_address:
+            params['mac'] = fingerprint.mac_address
+        
         # Add fingerprint data to request
         if fingerprint.dhcp_fingerprint:
             params['dhcp_fingerprint'] = fingerprint.dhcp_fingerprint
         
         if fingerprint.dhcp_vendor_class:
-            params['dhcp_vendor_class'] = fingerprint.dhcp_vendor_class
+            params['dhcp_vendor'] = fingerprint.dhcp_vendor_class  # Correct parameter name
         
         if fingerprint.hostname:
             params['hostname'] = fingerprint.hostname
@@ -240,39 +300,243 @@ class FingerbankAPIClient:
     
     def _parse_api_response(self, response_data: Dict) -> DeviceClassification:
         """
-        Parse Fingerbank API response and extract device classification.
-        Phase 5: Extract device name, type, OS, and confidence score.
+        Enhanced parsing of Fingerbank API v2 response with complete field extraction.
         """
         classification = DeviceClassification(raw_response=response_data)
         
         try:
-            # Handle different response formats
-            if 'device' in response_data:
+            # Extract core response metadata
+            classification.confidence_score = response_data.get('score', 0)
+            classification.request_id = response_data.get('request_id')
+            classification.version = response_data.get('version', '')
+            
+            # Interpret confidence score according to Fingerbank documentation
+            score = classification.confidence_score
+            if score < 30:
+                classification.confidence_level = 'very_low'
+            elif score <= 50:
+                classification.confidence_level = 'moderate' 
+            elif score <= 75:
+                classification.confidence_level = 'high'
+            else:
+                classification.confidence_level = 'very_high'
+            
+            # Extract device information with full hierarchy
+            if 'device' in response_data and response_data['device']:
                 device_info = response_data['device']
-                
-                # Extract device information
                 classification.fingerbank_device_id = device_info.get('id')
                 classification.device_name = device_info.get('name')
-                classification.device_type = device_info.get('category')
-                classification.operating_system = device_info.get('os')
+                classification.parent_device_id = device_info.get('parent_id')
+                classification.can_be_more_precise = device_info.get('can_be_more_precise')
                 
-                # Extract confidence score
-                classification.confidence_score = response_data.get('score', 0)
+                # Extract device hierarchy from parents
+                if 'parents' in device_info and device_info['parents']:
+                    classification.device_hierarchy = []
+                    for parent in device_info['parents']:
+                        classification.device_hierarchy.append(parent.get('name', ''))
                 
-            elif 'error' in response_data:
-                classification.error_message = response_data['error']
+                # Use full device_name from response root (complete hierarchy path)
+                if 'device_name' in response_data:
+                    classification.device_name = response_data['device_name']
+            
+            # Extract operating system information (separate from device)
+            if 'operating_system' in response_data and response_data['operating_system']:
+                os_info = response_data['operating_system']
+                classification.operating_system = os_info.get('name')
+                classification.operating_system_id = os_info.get('id')
                 
-            else:
-                # Handle unknown device responses
-                classification.error_message = "Unknown device - no classification available"
-                classification.confidence_score = 0
+                # Combine with version if available
+                if classification.version and classification.operating_system:
+                    classification.operating_system = f"{classification.operating_system} {classification.version}".strip()
+                
+                logger.debug(f"Extracted OS: {classification.operating_system} (ID: {classification.operating_system_id})")
+            
+            # Extract manufacturer information (distinct from device vendor)
+            if 'manufacturer' in response_data and response_data['manufacturer']:
+                manufacturer_info = response_data['manufacturer']
+                classification.manufacturer = manufacturer_info.get('name')
+                classification.manufacturer_id = manufacturer_info.get('id')
+                logger.debug(f"Extracted manufacturer: {classification.manufacturer}")
+            
+            # Determine device type from hierarchy analysis
+            classification.device_type = self._determine_device_type(
+                response_data.get('device_name', ''),
+                classification.device_hierarchy or [],
+                classification.manufacturer
+            )
+            
+            # Extract vulnerability information if available
+            if 'device' in response_data and 'vulnerabilities' in response_data['device']:
+                classification.vulnerabilities = response_data['device']['vulnerabilities']
+            
+            # Handle error responses
+            if 'errors' in response_data:
+                classification.error_message = response_data['errors'].get('details', 'Unknown error')
+            elif not classification.device_name and not classification.operating_system and not classification.manufacturer:
+                classification.error_message = "No device information found in response"
+            
+            logger.debug(f"Enhanced parsing - Device: {classification.device_name}, "
+                        f"OS: {classification.operating_system}, Manufacturer: {classification.manufacturer}, "
+                        f"Type: {classification.device_type}, Score: {classification.confidence_score} ({classification.confidence_level})")
             
             return classification
         
         except Exception as e:
-            logger.error(f"Error parsing API response: {e}")
+            logger.error(f"Error parsing enhanced API response: {e}")
+            logger.error(f"Response data: {response_data}")
             classification.error_message = f"Failed to parse API response: {e}"
             return classification
+    
+    def _determine_device_type(self, device_name: str, device_hierarchy: List[str], manufacturer: str) -> Optional[str]:
+        """Enhanced device type determination using full Fingerbank hierarchy analysis."""
+        
+        # Combine all available text for comprehensive analysis
+        full_text = ' '.join(filter(None, [device_name, manufacturer] + (device_hierarchy or []))).lower()
+        
+        logger.debug(f"Analyzing device hierarchy: {device_name}, parents: {device_hierarchy}, manufacturer: {manufacturer}")
+        
+        # Enhanced device type patterns with confidence weighting
+        device_patterns = {
+            'Phone': {
+                'high': ['smartphone', 'mobile phone', 'cellular phone', 'iphone', 'android phone'],
+                'medium': ['phone', 'galaxy', 'pixel', 'oneplus', 'huawei phone'],
+                'low': ['mobile']
+            },
+            'Tablet': {
+                'high': ['tablet', 'ipad', 'android tablet'],
+                'medium': ['slate', 'surface tablet'],
+                'low': ['tab']
+            },
+            'Computer': {
+                'high': ['laptop', 'desktop', 'workstation', 'macbook', 'imac', 'thinkpad'],
+                'medium': ['computer', 'pc', 'notebook', 'ultrabook'],
+                'low': ['mac', 'windows']
+            },
+            'Server': {
+                'high': ['server', 'rack server', 'blade server', 'database server'],
+                'medium': ['datacenter', 'enterprise server'],
+                'low': ['srv']
+            },
+            'Gaming Console': {
+                'high': ['playstation', 'xbox', 'nintendo switch', 'ps4', 'ps5', 'xbox one', 'xbox series'],
+                'medium': ['console', 'gaming console', 'nintendo'],
+                'low': ['gaming']
+            },
+            'Smart TV': {
+                'high': ['smart tv', 'android tv', 'roku tv', 'apple tv', 'fire tv'],
+                'medium': ['television', 'tv', 'media player', 'streaming device'],
+                'low': ['roku', 'chromecast']
+            },
+            'Network Device': {
+                'high': ['router', 'switch', 'access point', 'firewall', 'gateway'],
+                'medium': ['network device', 'networking', 'modem', 'bridge'],
+                'low': ['wireless', 'ethernet']
+            },
+            'Printer': {
+                'high': ['printer', 'multifunction printer', 'laser printer', 'inkjet printer'],
+                'medium': ['print server', 'scanner', 'copier'],
+                'low': ['print']
+            },
+            'Smart Speaker': {
+                'high': ['smart speaker', 'voice assistant', 'echo', 'google home', 'homepod'],
+                'medium': ['speaker', 'alexa device', 'google assistant'],
+                'low': ['audio']
+            },
+            'Smart Camera': {
+                'high': ['security camera', 'ip camera', 'webcam', 'doorbell camera', 'ring'],
+                'medium': ['camera', 'surveillance', 'nest cam'],
+                'low': ['cam']
+            },
+            'Smart Lighting': {
+                'high': ['smart light', 'smart bulb', 'hue', 'philips lighting'],
+                'medium': ['lighting', 'bulb', 'dimmer'],
+                'low': ['light']
+            },
+            'IoT Device': {
+                'high': ['iot device', 'smart sensor', 'smart plug', 'smart switch'],
+                'medium': ['sensor', 'thermostat', 'smart home', 'automation'],
+                'low': ['iot']
+            },
+            'Storage Device': {
+                'high': ['nas', 'network storage', 'storage server'],
+                'medium': ['storage', 'drive', 'disk'],
+                'low': ['hdd', 'ssd']
+            }
+        }
+        
+        # Find best match with confidence scoring
+        best_match = None
+        best_confidence = 0
+        best_device_type = None
+        
+        for device_type, confidence_levels in device_patterns.items():
+            for confidence, patterns in confidence_levels.items():
+                confidence_score = {'high': 3, 'medium': 2, 'low': 1}[confidence]
+                
+                for pattern in patterns:
+                    if pattern in full_text:
+                        if confidence_score > best_confidence:
+                            best_match = pattern
+                            best_confidence = confidence_score
+                            best_device_type = device_type
+                        # Break on first high-confidence match for this device type
+                        if confidence == 'high':
+                            break
+                
+                # Break on high-confidence match
+                if best_confidence == 3:
+                    break
+            
+            if best_confidence == 3:
+                break
+        
+        if best_device_type:
+            confidence_level = {3: 'high', 2: 'medium', 1: 'low'}[best_confidence]
+            logger.debug(f"Device type determined: {best_device_type} (confidence: {confidence_level}, pattern: '{best_match}')")
+            return best_device_type
+        
+        # Fallback: analyze hierarchy structure for device category hints
+        if device_hierarchy:
+            return self._analyze_hierarchy_structure(device_hierarchy, manufacturer)
+        
+        logger.debug("No device type pattern matched")
+        return None
+    
+    def _analyze_hierarchy_structure(self, device_hierarchy: List[str], manufacturer: str) -> Optional[str]:
+        """Analyze Fingerbank device hierarchy structure for classification hints."""
+        if not device_hierarchy:
+            return None
+        
+        # Join hierarchy for analysis
+        hierarchy_text = ' '.join(device_hierarchy).lower()
+        
+        # Hierarchy-based classification patterns
+        hierarchy_patterns = {
+            'Phone': ['mobile', 'cellular', 'smartphone'],
+            'Computer': ['operating system', 'os', 'desktop', 'laptop'],
+            'Gaming Console': ['gaming', 'console', 'entertainment'],
+            'Network Device': ['networking', 'infrastructure', 'wireless'],
+            'IoT Device': ['internet of things', 'embedded', 'sensor'],
+            'Smart TV': ['media', 'entertainment', 'streaming'],
+        }
+        
+        for device_type, keywords in hierarchy_patterns.items():
+            if any(keyword in hierarchy_text for keyword in keywords):
+                logger.debug(f"Device type from hierarchy: {device_type} (hierarchy: {hierarchy_text})")
+                return device_type
+        
+        # Manufacturer-based inference as last resort
+        if manufacturer:
+            manufacturer_lower = manufacturer.lower()
+            if any(mobile_mfg in manufacturer_lower for mobile_mfg in ['apple', 'samsung', 'google', 'huawei']):
+                # Could be phone, tablet, or computer - can't determine without more info
+                return None
+            elif any(gaming_mfg in manufacturer_lower for gaming_mfg in ['sony', 'microsoft', 'nintendo']):
+                return 'Gaming Console'
+            elif any(network_mfg in manufacturer_lower for network_mfg in ['cisco', 'netgear', 'linksys']):
+                return 'Network Device'
+        
+        return None
     
     def get_api_statistics(self) -> Dict:
         """Get API usage statistics."""
@@ -293,14 +557,12 @@ class FingerbankAPIClient:
 class DeviceClassificationManager:
     """
     Manages device classification workflow.
-    Phase 5: Handle classification storage and device inventory updates.
+    Simplified version without database dependencies.
     """
     
     def __init__(self, api_client: FingerbankAPIClient):
         """Initialize classification manager."""
         self.api_client = api_client
-        self.classification_store = get_classification_store()
-        self.device_store = get_device_store()
         
         self.classifications_processed = 0
         self.classifications_stored = 0
@@ -328,9 +590,8 @@ class DeviceClassificationManager:
                 classifications.append(classification)
                 self.classifications_processed += 1
                 
-                # Store classification in database
+                # Count successful classifications
                 if not classification.error_message:
-                    self._store_classification(fingerprint.mac_address, classification)
                     self.classifications_stored += 1
                 
                 # Add delay between requests to be respectful to API
@@ -349,31 +610,6 @@ class DeviceClassificationManager:
         logger.info(f"Completed processing: {self.classifications_stored} stored, {self.classifications_processed} total")
         return classifications
     
-    def _store_classification(self, mac_address: str, classification: DeviceClassification):
-        """Store device classification in database."""
-        try:
-            self.classification_store.insert_classification(
-                mac_address=mac_address,
-                fingerbank_device_id=classification.fingerbank_device_id,
-                device_name=classification.device_name,
-                device_type=classification.device_type,
-                operating_system=classification.operating_system,
-                confidence_score=classification.confidence_score,
-                fingerbank_raw_response=classification.raw_response
-            )
-            
-            # Update active device inventory
-            self.device_store.upsert_active_device(
-                mac_address=mac_address,
-                device_name=classification.device_name,
-                device_type=classification.device_type,
-                operating_system=classification.operating_system
-            )
-            
-            logger.debug(f"Stored classification for {mac_address}")
-        
-        except Exception as e:
-            logger.error(f"Failed to store classification for {mac_address}: {e}")
     
     def get_processing_statistics(self) -> Dict:
         """Get classification processing statistics."""
