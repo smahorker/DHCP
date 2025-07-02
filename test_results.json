@@ -1,0 +1,94 @@
+{
+  "test_metadata": {
+    "timestamp": "2025-07-02T00:26:18.222906",
+    "dataset_file": "test_logs/dataset.log",
+    "total_devices": 5,
+    "analyzer_version": "3.0"
+  },
+  "statistics": {
+    "confidence_distribution": {
+      "high": 5
+    },
+    "method_distribution": {
+      "dhcp_fingerprint": 5
+    },
+    "vendor_distribution": {
+      "Samsung Electronics Co.": 1,
+      "Apple": 2,
+      "ASUSTek COMPUTER INC.": 1,
+      "Google": 1
+    }
+  },
+  "devices": [
+    {
+      "mac_address": "28:39:5e:f1:65:c1",
+      "vendor": "Samsung Electronics Co.",
+      "device_type": "Android Phone",
+      "operating_system": "Android",
+      "overall_confidence": "high",
+      "classification_method": "dhcp_fingerprint",
+      "classification": "Samsung Electronics Co. Android Phone Android",
+      "vendor_confidence": "high",
+      "dhcp_fingerprint": "1,3,6,15,26,28,51,58,59,43",
+      "vendor_class": "android-dhcp-14",
+      "hostname": "Galaxy-S24-Ultra",
+      "ip_address": "0.0.0.0"
+    },
+    {
+      "mac_address": "3c:07:54:a2:b1:c4",
+      "vendor": "Apple",
+      "device_type": "iOS Device",
+      "operating_system": "iOS/macOS",
+      "overall_confidence": "high",
+      "classification_method": "dhcp_fingerprint",
+      "classification": "Apple iOS Device iOS/macOS",
+      "vendor_confidence": "high",
+      "dhcp_fingerprint": "1,121,3,6,15,119,252,95,44,46",
+      "vendor_class": "AAPLBM",
+      "hostname": "MacBook-Pro-M3",
+      "ip_address": "0.0.0.0"
+    },
+    {
+      "mac_address": "a8:5e:45:48:18:2d",
+      "vendor": "ASUSTek COMPUTER INC.",
+      "device_type": "Windows Computer",
+      "operating_system": "Windows 10/11",
+      "overall_confidence": "high",
+      "classification_method": "dhcp_fingerprint",
+      "classification": "ASUSTek COMPUTER INC. Windows Computer Windows 10/11",
+      "vendor_confidence": "high",
+      "dhcp_fingerprint": "1,15,3,6,44,46,47,31,33,121,249,43",
+      "vendor_class": "MSFT 5.0",
+      "hostname": "ASUS-Desktop",
+      "ip_address": "0.0.0.0"
+    },
+    {
+      "mac_address": "14:7d:da:5e:b9:23",
+      "vendor": "Apple",
+      "device_type": "iOS Device",
+      "operating_system": "iOS",
+      "overall_confidence": "high",
+      "classification_method": "dhcp_fingerprint",
+      "classification": "Apple iOS Device iOS",
+      "vendor_confidence": "high",
+      "dhcp_fingerprint": "1,121,3,6,15,119,252,95,44,46",
+      "vendor_class": "AAPLPHONE",
+      "hostname": "iPhone-15-Pro",
+      "ip_address": "0.0.0.0"
+    },
+    {
+      "mac_address": "f4:f5:e8:44:55:66",
+      "vendor": "Google",
+      "device_type": "Android Phone",
+      "operating_system": "Android",
+      "overall_confidence": "high",
+      "classification_method": "dhcp_fingerprint",
+      "classification": "Google Android Phone Android",
+      "vendor_confidence": "high",
+      "dhcp_fingerprint": "1,3,6,15,26,28,51,58,59,43",
+      "vendor_class": "android-dhcp-14",
+      "hostname": "Pixel-8-Pro",
+      "ip_address": "0.0.0.0"
+    }
+  ]
+}

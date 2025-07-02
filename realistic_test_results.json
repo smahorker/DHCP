@@ -1,0 +1,286 @@
+{
+  "timestamp": "2025-07-02T15:11:15.536805",
+  "total_devices": 23,
+  "statistics": {
+    "high_confidence": 8,
+    "medium_confidence": 13,
+    "low_confidence": 2,
+    "unknown_confidence": 0,
+    "vendor_only": 0,
+    "fingerbank_used": 23,
+    "fallback_used": 0,
+    "hostname_available": 16,
+    "vendor_class_available": 22
+  },
+  "device_types": {
+    "Phone": 6,
+    "Computer": 9,
+    "IoT Device": 2,
+    "Smart Plug": 2,
+    "Smart TV": 1,
+    "Network Device": 1,
+    "Unknown": 1,
+    "Gaming Console": 1
+  },
+  "operating_systems": {
+    "Android OS 14": 1,
+    "Android OS 13": 2,
+    "Windows OS": 9,
+    "Linux OS": 2,
+    "Android OS": 1,
+    "Linux": 2,
+    "Chrome OS": 1,
+    "BusyBox/OpenWrt": 1,
+    "Unknown": 1,
+    "Embedded OS": 1,
+    "Android OS 12": 2
+  },
+  "vendors": {
+    "Samsung Electronics Co.": 2,
+    "Intel Corporate": 3,
+    "Apple": 4,
+    "Dell Inc.": 2,
+    "GIGA-BYTE TECHNOLOGY CO.": 2,
+    "Micro-Star INTL CO.": 1,
+    "Raspberry Pi Trading Ltd": 1,
+    "TP-Link Systems Inc": 1,
+    "VMware": 1,
+    "D-Link International": 1,
+    "Zyxel Communications Corporation": 1,
+    "Belkin International Inc.": 1,
+    "Xiaomi Communications Co Ltd": 2,
+    "ASRock Incorporation": 1
+  },
+  "devices": [
+    {
+      "mac_address": "28:39:5e:f1:65:c1",
+      "vendor": "Samsung Electronics Co.",
+      "device_type": "Phone",
+      "operating_system": "Android OS 14",
+      "hostname": null,
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 59
+    },
+    {
+      "mac_address": "a4:c3:f0:85:ac:2d",
+      "vendor": "Intel Corporate",
+      "device_type": "Phone",
+      "operating_system": "Android OS 13",
+      "hostname": "android-dhcp-13",
+      "overall_confidence": "high",
+      "has_vendor_class": true,
+      "fingerbank_score": 60
+    },
+    {
+      "mac_address": "88:66:5a:12:34:56",
+      "vendor": "Apple",
+      "device_type": "Computer",
+      "operating_system": "Windows OS",
+      "hostname": "iPhone",
+      "overall_confidence": "high",
+      "has_vendor_class": true,
+      "fingerbank_score": 60
+    },
+    {
+      "mac_address": "34:17:eb:aa:bb:cc",
+      "vendor": "Dell Inc.",
+      "device_type": "Computer",
+      "operating_system": "Windows OS",
+      "hostname": "Unknown-Device",
+      "overall_confidence": "high",
+      "has_vendor_class": true,
+      "fingerbank_score": 73
+    },
+    {
+      "mac_address": "98:01:a7:dd:ee:ff",
+      "vendor": "Apple",
+      "device_type": "Computer",
+      "operating_system": "Windows OS",
+      "hostname": "DESKTOP-ABC123",
+      "overall_confidence": "high",
+      "has_vendor_class": true,
+      "fingerbank_score": 73
+    },
+    {
+      "mac_address": "d4:6d:6d:11:22:33",
+      "vendor": "Intel Corporate",
+      "device_type": "Computer",
+      "operating_system": "Windows OS",
+      "hostname": "MacBook-Pro",
+      "overall_confidence": "high",
+      "has_vendor_class": true,
+      "fingerbank_score": 60
+    },
+    {
+      "mac_address": "b4:2e:99:44:55:66",
+      "vendor": "GIGA-BYTE TECHNOLOGY CO.",
+      "device_type": "Computer",
+      "operating_system": "Windows OS",
+      "hostname": null,
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 73
+    },
+    {
+      "mac_address": "2c:f0:5d:77:88:99",
+      "vendor": "Micro-Star INTL CO.",
+      "device_type": "Computer",
+      "operating_system": "Windows OS",
+      "hostname": "ESP_123456",
+      "overall_confidence": "high",
+      "has_vendor_class": true,
+      "fingerbank_score": 62
+    },
+    {
+      "mac_address": "dc:a6:32:aa:bb:cc",
+      "vendor": "Raspberry Pi Trading Ltd",
+      "device_type": "IoT Device",
+      "operating_system": "Linux OS",
+      "hostname": "Galaxy-S24",
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 41
+    },
+    {
+      "mac_address": "50:32:75:dd:ee:ff",
+      "vendor": "Samsung Electronics Co.",
+      "device_type": "Phone",
+      "operating_system": "Android OS",
+      "hostname": "Ring-Camera-1",
+      "overall_confidence": "medium",
+      "has_vendor_class": false,
+      "fingerbank_score": 34
+    },
+    {
+      "mac_address": "e8:48:b8:11:22:33",
+      "vendor": "TP-Link Systems Inc",
+      "device_type": "Smart Plug",
+      "operating_system": "Linux",
+      "hostname": null,
+      "overall_confidence": "low",
+      "has_vendor_class": true,
+      "fingerbank_score": 29
+    },
+    {
+      "mac_address": "94:de:80:44:55:66",
+      "vendor": "GIGA-BYTE TECHNOLOGY CO.",
+      "device_type": "Smart TV",
+      "operating_system": "Chrome OS",
+      "hostname": "Chromecast",
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 37
+    },
+    {
+      "mac_address": "00:50:56:77:88:99",
+      "vendor": "VMware",
+      "device_type": "IoT Device",
+      "operating_system": "Linux OS",
+      "hostname": "raspberrypi",
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 58
+    },
+    {
+      "mac_address": "6c:72:20:aa:bb:cc",
+      "vendor": "D-Link International",
+      "device_type": "Network Device",
+      "operating_system": "BusyBox/OpenWrt",
+      "hostname": "NETGEAR-1234",
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 32
+    },
+    {
+      "mac_address": "58:8b:f3:dd:ee:ff",
+      "vendor": "Zyxel Communications Corporation",
+      "device_type": null,
+      "operating_system": null,
+      "hostname": null,
+      "overall_confidence": "low",
+      "has_vendor_class": true,
+      "fingerbank_score": 29
+    },
+    {
+      "mac_address": "c0:56:27:11:22:33",
+      "vendor": "Belkin International Inc.",
+      "device_type": "Gaming Console",
+      "operating_system": "Embedded OS",
+      "hostname": "PS5-Console",
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 32
+    },
+    {
+      "mac_address": "48:2c:a0:44:55:66",
+      "vendor": "Xiaomi Communications Co Ltd",
+      "device_type": "Phone",
+      "operating_system": "Android OS 13",
+      "hostname": "FireTV-Stick",
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 59
+    },
+    {
+      "mac_address": "00:1e:c9:77:88:99",
+      "vendor": "Dell Inc.",
+      "device_type": "Computer",
+      "operating_system": "Windows OS",
+      "hostname": "HP-Printer",
+      "overall_confidence": "high",
+      "has_vendor_class": true,
+      "fingerbank_score": 62
+    },
+    {
+      "mac_address": "f0:18:98:aa:bb:cc",
+      "vendor": "Apple",
+      "device_type": "Computer",
+      "operating_system": "Windows OS",
+      "hostname": "Nest-Thermostat",
+      "overall_confidence": "high",
+      "has_vendor_class": true,
+      "fingerbank_score": 60
+    },
+    {
+      "mac_address": "70:85:c2:dd:ee:ff",
+      "vendor": "ASRock Incorporation",
+      "device_type": "Smart Plug",
+      "operating_system": "Linux",
+      "hostname": "SMART-TV-LG",
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 29
+    },
+    {
+      "mac_address": "4c:49:e3:11:22:33",
+      "vendor": "Xiaomi Communications Co Ltd",
+      "device_type": "Phone",
+      "operating_system": "Android OS 12",
+      "hostname": null,
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 59
+    },
+    {
+      "mac_address": "8c:85:90:44:55:66",
+      "vendor": "Apple",
+      "device_type": "Computer",
+      "operating_system": "Windows OS",
+      "hostname": null,
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 73
+    },
+    {
+      "mac_address": "a0:88:b4:77:88:99",
+      "vendor": "Intel Corporate",
+      "device_type": "Phone",
+      "operating_system": "Android OS 12",
+      "hostname": null,
+      "overall_confidence": "medium",
+      "has_vendor_class": true,
+      "fingerbank_score": 59
+    }
+  ]
+}

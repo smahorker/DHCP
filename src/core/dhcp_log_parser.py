@@ -62,6 +62,9 @@ class DHCPLogParser:
         # Compiled regex patterns for different log formats
         self.log_patterns = self._compile_log_patterns()
         
+        # OUI-based vendor class mapping for improved Fingerbank accuracy
+        self.oui_vendor_class_map = self._build_oui_vendor_class_map()
+        
         logger.info("DHCP Log Parser initialized")
     
     def _compile_log_patterns(self) -> Dict[str, re.Pattern]:
@@ -190,6 +193,89 @@ class DHCPLogParser:
         )
         
         return patterns
+    
+    def _build_oui_vendor_class_map(self) -> Dict[str, str]:
+        """Build OUI-to-vendor-class mapping for enhanced Fingerbank accuracy."""
+        return {
+            # Samsung Android devices
+            '28:39:5e': 'android-dhcp-14',
+            'e8:50:8b': 'android-dhcp-13', 
+            'dc:a6:32': 'android-dhcp-14',
+            '34:2e:b6': 'android-dhcp-13',
+            '68:64:4b': 'android-dhcp-14',
+            
+            # Apple devices - use Microsoft DHCP client stack
+            '88:66:5a': 'MSFT 5.0',
+            'f0:18:98': 'MSFT 5.0',
+            'd4:6d:6d': 'MSFT 5.0',
+            '8c:85:90': 'MSFT 5.0',
+            '98:01:a7': 'MSFT 5.0',
+            '3c:07:54': 'MSFT 5.0',
+            'a8:60:b6': 'MSFT 5.0',
+            'ac:de:48': 'MSFT 5.0',
+            
+            # Intel NICs (often in Android devices/laptops)
+            'a4:c3:f0': 'android-dhcp-13',  # Often Intel Android
+            'd4:6d:6d': 'MSFT 5.0',         # Intel in Apple devices
+            'a0:88:b4': 'android-dhcp-12',  # Intel Android tablets
+            
+            # Dell devices (typically Windows)
+            '34:17:eb': 'MSFT 5.0',
+            '00:1e:c9': 'MSFT 5.0',
+            '54:ee:75': 'MSFT 5.0',
+            
+            # IoT and Embedded devices
+            '2c:f0:5d': 'espressif',        # ESP32/ESP8266 devices
+            'cc:50:e3': 'espressif',        # ESP32
+            '30:ae:a4': 'espressif',        # ESP8266
+            'dc:a6:32': 'linux-dhcp',       # Raspberry Pi (when not Android)
+            'b8:27:eb': 'linux-dhcp',       # Raspberry Pi Foundation
+            
+            # Network equipment vendors
+            'e8:48:b8': 'udhcp',            # TP-Link
+            '6c:72:20': 'busybox-dhcp',     # D-Link
+            '58:8b:f3': 'busybox-dhcp',     # Zyxel
+            'c0:56:27': 'busybox-dhcp',     # Belkin
+            '70:85:c2': 'udhcp',            # ASRock
+            
+            # Gaming consoles
+            'c0:56:27': 'Sony-PS5',         # PlayStation 5 (Belkin OUI used by Sony)
+            '00:50:c2': 'Microsoft-Xbox',   # Xbox consoles
+            '98:b6:e9': 'Nintendo-Switch',  # Nintendo Switch
+            
+            # Xiaomi devices
+            '48:2c:a0': 'android-dhcp-13',  # Xiaomi phones
+            '4c:49:e3': 'android-dhcp-12',  # Xiaomi IoT
+            '34:ce:00': 'android-dhcp-14',  # Xiaomi
+            
+            # Google devices
+            '94:de:80': 'dhcpcd',           # Google Chromecast (uses dhcpcd)
+            'f8:8f:ca': 'dhcpcd',           # Google Nest devices
+            
+            # VMware virtual devices
+            '00:50:56': 'linux-dhcp',       # VMware virtual machines
+            '00:0c:29': 'linux-dhcp',       # VMware
+            '00:05:69': 'linux-dhcp',       # VMware
+            
+            # Common Windows OEMs
+            'b4:2e:99': 'MSFT 5.0',         # GIGA-BYTE (Windows PCs)
+            '2c:f0:5d': 'MSFT 5.0',         # Micro-Star (Windows PCs)
+        }
+    
+    def _get_vendor_class_from_oui(self, mac_address: str) -> Optional[str]:
+        """Get vendor class from MAC address OUI when not explicitly provided."""
+        if not mac_address or len(mac_address) < 8:
+            return None
+        
+        # Extract OUI (first 8 characters: xx:xx:xx)
+        oui = mac_address[:8].lower()
+        vendor_class = self.oui_vendor_class_map.get(oui)
+        
+        if vendor_class:
+            logger.debug(f"Inferred vendor class '{vendor_class}' from OUI {oui}")
+            return vendor_class
+        
+        return None
     
     def _normalize_mac_address(self, mac_address: str) -> str:
         """Normalize MAC address to consistent format (aa:bb:cc:dd:ee:ff)."""
@@ -427,6 +513,13 @@ class DHCPLogParser:
                 dhcp_fingerprint = dhcp_options.get('option_55')  # Parameter Request List (critical)
                 client_fqdn = dhcp_options.get('option_81')  # Client FQDN
                 vendor_class = dhcp_options.get('option_60')  # Vendor Class (critical)
+                
+                # OUI-based vendor class fallback when not explicitly provided
+                if not vendor_class:
+                    vendor_class = self._get_vendor_class_from_oui(mac_address)
+                    if vendor_class:
+                        dhcp_options['option_60'] = vendor_class  # Store for consistency
+                
                 user_class = dhcp_options.get('option_77')  # User Class (Windows domain)
                 client_arch = dhcp_options.get('option_93')  # Client Architecture
                 vendor_specific = dhcp_options.get('option_43')  # Vendor-Specific Info

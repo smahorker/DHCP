@@ -1,0 +1,455 @@
+{
+  "timestamp": "2025-07-02T15:08:39.659368",
+  "test_log": "test_logs/realistic_home_network.log",
+  "summary": {
+    "total_devices": 23,
+    "original_fingerbank_usage": 15,
+    "new_fingerbank_usage": 23,
+    "fingerbank_improvement": 8,
+    "null_score_reduction": 8
+  },
+  "original_stats": {
+    "total": 23,
+    "methods": {
+      "fingerbank": 12,
+      "hostname_specific": 8,
+      "fallback": 2,
+      "null": 1
+    },
+    "confidence": {
+      "medium": 15,
+      "high": 8
+    },
+    "device_types": {
+      "Phone": 6,
+      "Computer": 6,
+      "Smart Camera": 1,
+      "Smart Plug": 2,
+      "Streaming Device": 2,
+      "IoT Device": 1,
+      "Network Device": 1,
+      "Unknown": 1,
+      "Gaming Console": 1,
+      "Printer": 1,
+      "Smart Thermostat": 1
+    },
+    "fingerbank_coverage": 15
+  },
+  "new_stats": {
+    "total": 23,
+    "methods": {
+      "fingerbank": 20,
+      "enhanced_fallback": 2,
+      "unknown": 1
+    },
+    "confidence": {
+      "medium": 13,
+      "high": 8,
+      "low": 2
+    },
+    "device_types": {
+      "Phone": 6,
+      "Computer": 9,
+      "IoT Device": 2,
+      "Smart Plug": 2,
+      "Smart TV": 1,
+      "Network Device": 1,
+      "Unknown": 1,
+      "Gaming Console": 1
+    },
+    "fingerbank_coverage": 23
+  },
+  "device_comparisons": [
+    {
+      "mac_address": "00:1e:c9:77:88:99",
+      "vendor": "Dell Inc.",
+      "hostname": "HP-Printer",
+      "original": {
+        "device_type": "Printer",
+        "classification_method": "hostname_specific",
+        "overall_confidence": "high",
+        "fingerbank_score": null
+      },
+      "new": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "high",
+        "fingerbank_score": 62
+      }
+    },
+    {
+      "mac_address": "00:50:56:77:88:99",
+      "vendor": "VMware",
+      "hostname": "raspberrypi",
+      "original": {
+        "device_type": "IoT Device",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 58
+      },
+      "new": {
+        "device_type": "IoT Device",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 58
+      }
+    },
+    {
+      "mac_address": "28:39:5e:f1:65:c1",
+      "vendor": "Samsung Electronics Co.",
+      "hostname": null,
+      "original": {
+        "device_type": "Phone",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 59
+      },
+      "new": {
+        "device_type": "Phone",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 59
+      }
+    },
+    {
+      "mac_address": "2c:f0:5d:77:88:99",
+      "vendor": "Micro-Star INTL CO.",
+      "hostname": "ESP_123456",
+      "original": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 62
+      },
+      "new": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "high",
+        "fingerbank_score": 62
+      }
+    },
+    {
+      "mac_address": "34:17:eb:aa:bb:cc",
+      "vendor": "Dell Inc.",
+      "hostname": "Unknown-Device",
+      "original": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 73
+      },
+      "new": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "high",
+        "fingerbank_score": 73
+      }
+    },
+    {
+      "mac_address": "48:2c:a0:44:55:66",
+      "vendor": "Xiaomi Communications Co Ltd",
+      "hostname": "FireTV-Stick",
+      "original": {
+        "device_type": "Streaming Device",
+        "classification_method": "hostname_specific",
+        "overall_confidence": "high",
+        "fingerbank_score": null
+      },
+      "new": {
+        "device_type": "Phone",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 59
+      }
+    },
+    {
+      "mac_address": "4c:49:e3:11:22:33",
+      "vendor": "Xiaomi Communications Co Ltd",
+      "hostname": null,
+      "original": {
+        "device_type": "Phone",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 59
+      },
+      "new": {
+        "device_type": "Phone",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 59
+      }
+    },
+    {
+      "mac_address": "50:32:75:dd:ee:ff",
+      "vendor": "Samsung Electronics Co.",
+      "hostname": "Ring-Camera-1",
+      "original": {
+        "device_type": "Smart Camera",
+        "classification_method": "hostname_specific",
+        "overall_confidence": "high",
+        "fingerbank_score": null
+      },
+      "new": {
+        "device_type": "Phone",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 34
+      }
+    },
+    {
+      "mac_address": "58:8b:f3:dd:ee:ff",
+      "vendor": "Zyxel Communications Corporation",
+      "hostname": null,
+      "original": {
+        "device_type": null,
+        "classification_method": null,
+        "overall_confidence": "medium",
+        "fingerbank_score": 29
+      },
+      "new": {
+        "device_type": null,
+        "classification_method": "unknown",
+        "overall_confidence": "low",
+        "fingerbank_score": 29
+      }
+    },
+    {
+      "mac_address": "6c:72:20:aa:bb:cc",
+      "vendor": "D-Link International",
+      "hostname": "NETGEAR-1234",
+      "original": {
+        "device_type": "Network Device",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 32
+      },
+      "new": {
+        "device_type": "Network Device",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 32
+      }
+    },
+    {
+      "mac_address": "70:85:c2:dd:ee:ff",
+      "vendor": "ASRock Incorporation",
+      "hostname": "SMART-TV-LG",
+      "original": {
+        "device_type": "Smart Plug",
+        "classification_method": "fallback",
+        "overall_confidence": "medium",
+        "fingerbank_score": 29
+      },
+      "new": {
+        "device_type": "Smart Plug",
+        "classification_method": "enhanced_fallback",
+        "overall_confidence": "medium",
+        "fingerbank_score": 29
+      }
+    },
+    {
+      "mac_address": "88:66:5a:12:34:56",
+      "vendor": "Apple",
+      "hostname": "iPhone",
+      "original": {
+        "device_type": "Phone",
+        "classification_method": "hostname_specific",
+        "overall_confidence": "high",
+        "fingerbank_score": null
+      },
+      "new": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "high",
+        "fingerbank_score": 60
+      }
+    },
+    {
+      "mac_address": "8c:85:90:44:55:66",
+      "vendor": "Apple",
+      "hostname": null,
+      "original": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 73
+      },
+      "new": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 73
+      }
+    },
+    {
+      "mac_address": "94:de:80:44:55:66",
+      "vendor": "GIGA-BYTE TECHNOLOGY CO.",
+      "hostname": "Chromecast",
+      "original": {
+        "device_type": "Streaming Device",
+        "classification_method": "hostname_specific",
+        "overall_confidence": "high",
+        "fingerbank_score": null
+      },
+      "new": {
+        "device_type": "Smart TV",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 37
+      }
+    },
+    {
+      "mac_address": "98:01:a7:dd:ee:ff",
+      "vendor": "Apple",
+      "hostname": "DESKTOP-ABC123",
+      "original": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 73
+      },
+      "new": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "high",
+        "fingerbank_score": 73
+      }
+    },
+    {
+      "mac_address": "a0:88:b4:77:88:99",
+      "vendor": "Intel Corporate",
+      "hostname": null,
+      "original": {
+        "device_type": "Phone",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 59
+      },
+      "new": {
+        "device_type": "Phone",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 59
+      }
+    },
+    {
+      "mac_address": "a4:c3:f0:85:ac:2d",
+      "vendor": "Intel Corporate",
+      "hostname": "android-dhcp-13",
+      "original": {
+        "device_type": "Phone",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 60
+      },
+      "new": {
+        "device_type": "Phone",
+        "classification_method": "fingerbank",
+        "overall_confidence": "high",
+        "fingerbank_score": 60
+      }
+    },
+    {
+      "mac_address": "b4:2e:99:44:55:66",
+      "vendor": "GIGA-BYTE TECHNOLOGY CO.",
+      "hostname": null,
+      "original": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 73
+      },
+      "new": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 73
+      }
+    },
+    {
+      "mac_address": "c0:56:27:11:22:33",
+      "vendor": "Belkin International Inc.",
+      "hostname": "PS5-Console",
+      "original": {
+        "device_type": "Gaming Console",
+        "classification_method": "hostname_specific",
+        "overall_confidence": "high",
+        "fingerbank_score": null
+      },
+      "new": {
+        "device_type": "Gaming Console",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 32
+      }
+    },
+    {
+      "mac_address": "d4:6d:6d:11:22:33",
+      "vendor": "Intel Corporate",
+      "hostname": "MacBook-Pro",
+      "original": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 60
+      },
+      "new": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "high",
+        "fingerbank_score": 60
+      }
+    },
+    {
+      "mac_address": "dc:a6:32:aa:bb:cc",
+      "vendor": "Raspberry Pi Trading Ltd",
+      "hostname": "Galaxy-S24",
+      "original": {
+        "device_type": "Phone",
+        "classification_method": "hostname_specific",
+        "overall_confidence": "high",
+        "fingerbank_score": null
+      },
+      "new": {
+        "device_type": "IoT Device",
+        "classification_method": "fingerbank",
+        "overall_confidence": "medium",
+        "fingerbank_score": 41
+      }
+    },
+    {
+      "mac_address": "e8:48:b8:11:22:33",
+      "vendor": "TP-Link Systems Inc",
+      "hostname": null,
+      "original": {
+        "device_type": "Smart Plug",
+        "classification_method": "fallback",
+        "overall_confidence": "medium",
+        "fingerbank_score": 29
+      },
+      "new": {
+        "device_type": "Smart Plug",
+        "classification_method": "enhanced_fallback",
+        "overall_confidence": "low",
+        "fingerbank_score": 29
+      }
+    },
+    {
+      "mac_address": "f0:18:98:aa:bb:cc",
+      "vendor": "Apple",
+      "hostname": "Nest-Thermostat",
+      "original": {
+        "device_type": "Smart Thermostat",
+        "classification_method": "hostname_specific",
+        "overall_confidence": "high",
+        "fingerbank_score": null
+      },
+      "new": {
+        "device_type": "Computer",
+        "classification_method": "fingerbank",
+        "overall_confidence": "high",
+        "fingerbank_score": 60
+      }
+    }
+  ]
+}

@@ -34,11 +34,38 @@ class EnhancedFallbackClassifier:
             r'(?i).*galaxy.*': 'Android',
             r'(?i).*pixel.*': 'Android',
             r'(?i).*oneplus.*': 'Android',
+            r'(?i).*samsung.*': 'Android',
+            
+            # Smart Home/IoT patterns
+            r'(?i).*ring.*': 'Linux',
+            r'(?i).*nest.*': 'Linux',
+            r'(?i).*echo.*': 'Fire OS',
+            r'(?i).*alexa.*': 'Fire OS',
+            r'(?i).*firetv.*': 'Fire OS',
+            r'(?i).*fire.*tv.*': 'Fire OS',
+            r'(?i).*chromecast.*': 'Chrome OS',
+            r'(?i).*esp_.*': 'Embedded OS',
+            r'(?i).*esp32.*': 'Embedded OS',
+            r'(?i).*esp8266.*': 'Embedded OS',
+            
+            # Gaming Consoles
+            r'(?i).*ps[0-9].*': 'PlayStation OS',
+            r'(?i).*playstation.*': 'PlayStation OS',
+            r'(?i).*xbox.*': 'Xbox OS',
+            r'(?i).*nintendo.*': 'Nintendo OS',
+            
+            # Printers
+            r'(?i).*printer.*': 'Embedded OS',
+            r'(?i).*hp.*print.*': 'Embedded OS',
+            r'(?i).*canon.*print.*': 'Embedded OS',
+            r'(?i).*epson.*print.*': 'Embedded OS',
             
             # Linux/Unix patterns
             r'(?i).*ubuntu.*': 'Linux',
             r'(?i).*debian.*': 'Linux', 
             r'(?i).*linux.*': 'Linux',
+            r'(?i).*raspberrypi.*': 'Linux',
+            r'(?i).*raspberry.*': 'Linux',
             r'(?i).*pfsense.*': 'FreeBSD',
             r'(?i).*freebsd.*': 'FreeBSD',
             
@@ -61,20 +88,63 @@ class EnhancedFallbackClassifier:
             r'(?i)ubuntu.*': 'Linux'
         }
         
-        # Device type patterns
+        # Device type patterns - prioritized by specificity
         self.device_type_patterns = {
-            # Mobile devices
-            r'(?i).*(iphone|galaxy|pixel|android|mobile|phone).*': 'Phone',
-            r'(?i).*(ipad|tablet).*': 'Tablet',
+            # High specificity patterns (exact device identification)
+            r'(?i).*iphone.*': 'Phone',
+            r'(?i).*ipad.*': 'Tablet', 
+            r'(?i).*galaxy.*': 'Phone',
+            r'(?i).*pixel.*': 'Phone',
             
-            # Computers
+            # Smart Home/IoT devices (high specificity)
+            r'(?i).*ring.*camera.*': 'Smart Camera',
+            r'(?i).*ring.*doorbell.*': 'Smart Camera',
+            r'(?i).*nest.*thermostat.*': 'Smart Thermostat',
+            r'(?i).*nest.*cam.*': 'Smart Camera',
+            r'(?i).*echo.*dot.*': 'Smart Speaker',
+            r'(?i).*echo.*show.*': 'Smart Speaker',
+            r'(?i).*echo.*studio.*': 'Smart Speaker',
+            r'(?i).*alexa.*': 'Smart Speaker',
+            r'(?i).*chromecast.*': 'Streaming Device',
+            r'(?i).*firetv.*stick.*': 'Streaming Device',
+            r'(?i).*fire.*tv.*': 'Streaming Device',
+            r'(?i).*apple.*tv.*': 'Streaming Device',
+            r'(?i).*roku.*': 'Streaming Device',
+            r'(?i).*hue.*bridge.*': 'Smart Hub',
+            r'(?i).*hue.*': 'Smart Lighting',
+            r'(?i).*philips.*hue.*': 'Smart Lighting',
+            
+            # Gaming Consoles
+            r'(?i).*ps[0-9].*console.*': 'Gaming Console',
+            r'(?i).*ps[0-9].*': 'Gaming Console',
+            r'(?i).*playstation.*': 'Gaming Console',
+            r'(?i).*xbox.*': 'Gaming Console',
+            r'(?i).*nintendo.*': 'Gaming Console',
+            
+            # Printers
+            r'(?i).*printer.*': 'Printer',
+            r'(?i).*hp.*print.*': 'Printer',
+            r'(?i).*canon.*print.*': 'Printer',
+            r'(?i).*epson.*print.*': 'Printer',
+            
+            # IoT/Embedded devices
+            r'(?i).*esp_.*': 'IoT Device',
+            r'(?i).*esp32.*': 'IoT Device',
+            r'(?i).*esp8266.*': 'IoT Device',
+            r'(?i).*raspberry.*': 'Single Board Computer',
+            r'(?i).*raspberrypi.*': 'Single Board Computer',
+            
+            # Mobile devices (medium specificity)
+            r'(?i).*(android|mobile|phone).*': 'Phone',
+            r'(?i).*(tablet).*': 'Tablet',
+            
+            # Computers (medium specificity)
             r'(?i).*(macbook|laptop|notebook).*': 'Laptop',
             r'(?i).*(desktop|pc|workstation|imac).*': 'Desktop',
             r'(?i).*(server).*': 'Server',
             
-            # Network devices
+            # Network devices (medium specificity)
             r'(?i).*(router|gateway|switch|access.?point).*': 'Network Device',
-            r'(?i).*(printer|print).*': 'Printer',
             r'(?i).*(camera|cam).*': 'Camera',
             r'(?i).*(tv|television|smart.?tv).*': 'Smart TV'
         }
@@ -116,7 +186,7 @@ class EnhancedFallbackClassifier:
             # Smart Speakers
             r'(google|nest)(home|mini)': {'operating_system': 'Google Assistant', 'device_type': 'Smart Speaker'},
             r'(amazon|echo|alexa)': {'operating_system': 'Fire OS', 'device_type': 'Smart Speaker'},
-            r'(apple|homepod)': {'operating_system': 'audioOS', 'device_type': 'Smart Speaker'},
+            r'(homepod|apple.*speaker)': {'operating_system': 'audioOS', 'device_type': 'Smart Speaker'},
 
             # Smart Cameras
             r'(ring|doorbell)': {'operating_system': 'Linux', 'device_type': 'Smart Camera'},
@@ -218,76 +288,121 @@ class EnhancedFallbackClassifier:
     def enhanced_classification(self, hostname: str, vendor_class: str, 
                               dhcp_fingerprint: str, vendor: str) -> Dict:
         """
-        Comprehensive fallback classification using all available data.
+        Comprehensive classification using all available data with hostname prioritization.
         """
         result = {
             'operating_system': None,
             'device_type': None,
             'confidence': 'low',
-            'method': 'fallback'
+            'method': 'fallback',
+            'hostname_override': False
         }
 
-        # Method 1: IoT Signatures (high confidence)
-        os_from_iot, device_type_from_iot = self._classify_by_iot_signature(hostname, vendor)
-        if os_from_iot:
-            result['operating_system'] = os_from_iot
-            result['confidence'] = 'high'
-            result['method'] = 'iot_signature'
-        if device_type_from_iot:
-            result['device_type'] = device_type_from_iot
+        # Method 1: Hostname Analysis (HIGHEST PRIORITY when specific)
+        hostname_os = None
+        hostname_device_type = None
+        hostname_confidence = 'low'
         
-        # Method 2: DHCP Fingerprint (highest confidence)
-        if not result['operating_system'] and dhcp_fingerprint:
+        if hostname:
+            hostname_os, hostname_device_type = self.classify_by_hostname(hostname)
+            
+            # Check for high-specificity hostname patterns
+            high_specificity_patterns = [
+                r'(?i).*iphone.*', r'(?i).*ipad.*', r'(?i).*galaxy.*', r'(?i).*pixel.*',
+                r'(?i).*ring.*camera.*', r'(?i).*nest.*thermostat.*', r'(?i).*chromecast.*',
+                r'(?i).*firetv.*', r'(?i).*fire.*tv.*', r'(?i).*ps[0-9].*', r'(?i).*xbox.*',
+                r'(?i).*printer.*', r'(?i).*hp.*print.*', r'(?i).*echo.*', r'(?i).*alexa.*'
+            ]
+            
+            for pattern in high_specificity_patterns:
+                if re.match(pattern, hostname):
+                    hostname_confidence = 'very_high'
+                    break
+            
+            # Apply hostname results with appropriate confidence
+            if hostname_device_type and hostname_confidence == 'very_high':
+                result['device_type'] = hostname_device_type
+                result['confidence'] = 'high'
+                result['method'] = 'hostname_specific'
+                result['hostname_override'] = True
+            
+            if hostname_os and hostname_confidence == 'very_high':
+                result['operating_system'] = hostname_os
+                if result['confidence'] != 'high':
+                    result['confidence'] = 'medium'
+                result['method'] = 'hostname_specific'
+
+        # Method 2: DHCP Fingerprint (high confidence)
+        if dhcp_fingerprint and not result['hostname_override']:
             os_from_fp = self.classify_by_dhcp_fingerprint(dhcp_fingerprint)
-            if os_from_fp:
+            if os_from_fp and not result['operating_system']:
                 result['operating_system'] = os_from_fp
                 result['confidence'] = 'high'
                 result['method'] = 'dhcp_fingerprint'
         
-        # Method 2: Vendor Class (medium confidence)
-        if not result['operating_system'] and vendor_class:
+        # Method 3: Vendor Class (high confidence) 
+        if vendor_class and not result['hostname_override']:
             os_from_vc = self.classify_by_vendor_class(vendor_class)
-            if os_from_vc:
+            if os_from_vc and not result['operating_system']:
                 result['operating_system'] = os_from_vc
-                result['confidence'] = 'medium'
+                result['confidence'] = 'high'
                 result['method'] = 'vendor_class'
 
-        # Method 3: Vendor-specific rules (medium confidence)
-        if not result['operating_system'] and vendor:
+        # Method 4: IoT Signatures (medium confidence)
+        if not result['operating_system'] or not result['device_type']:
+            os_from_iot, device_type_from_iot = self._classify_by_iot_signature(hostname, vendor)
+            
+            if not result['operating_system'] and os_from_iot:
+                result['operating_system'] = os_from_iot
+                if result['confidence'] == 'low':
+                    result['confidence'] = 'medium'
+                result['method'] = 'iot_signature'
+                
+            if not result['device_type'] and device_type_from_iot and not result['hostname_override']:
+                result['device_type'] = device_type_from_iot
+
+        # Method 5: Vendor-specific rules (medium confidence)
+        if not result['operating_system'] or not result['device_type']:
             os_from_vendor, device_type_from_vendor = self._classify_by_vendor_rules(vendor)
-            if os_from_vendor:
+            
+            if not result['operating_system'] and os_from_vendor:
                 result['operating_system'] = os_from_vendor
-                result['confidence'] = 'medium'
+                if result['confidence'] == 'low':
+                    result['confidence'] = 'medium'
                 result['method'] = 'vendor_rules'
-            if not result['device_type'] and device_type_from_vendor:
+                
+            if not result['device_type'] and device_type_from_vendor and not result['hostname_override']:
                 result['device_type'] = device_type_from_vendor
         
-        # Method 4: Hostname Analysis (lower confidence)
-        if hostname:
-            os_from_hostname, device_type_from_hostname = self.classify_by_hostname(hostname)
-            
-            if not result['operating_system'] and os_from_hostname:
-                result['operating_system'] = os_from_hostname
-                result['confidence'] = 'medium' if result['confidence'] == 'low' else result['confidence']
+        # Method 6: Hostname Analysis (medium confidence for remaining fields)
+        if hostname and (not result['operating_system'] or not result['device_type']):
+            if not result['operating_system'] and hostname_os:
+                result['operating_system'] = hostname_os
+                if result['confidence'] == 'low':
+                    result['confidence'] = 'medium'
                 result['method'] = 'hostname'
                 
-            if not result['device_type'] and device_type_from_hostname:
-                result['device_type'] = device_type_from_hostname
+            if not result['device_type'] and hostname_device_type and not result['hostname_override']:
+                result['device_type'] = hostname_device_type
         
-        # Method 4: Vendor-based inference (lowest confidence)
+        # Method 7: Vendor-based inference (lowest confidence)
         if not result['operating_system'] and vendor:
             if 'apple' in vendor.lower():
                 result['operating_system'] = 'iOS/macOS'
-                result['confidence'] = 'low'
+                if result['confidence'] == 'low':
+                    result['confidence'] = 'low'
                 result['method'] = 'vendor_inference'
             elif 'microsoft' in vendor.lower():
                 result['operating_system'] = 'Windows'
-                result['confidence'] = 'low'
+                if result['confidence'] == 'low':
+                    result['confidence'] = 'low'
                 result['method'] = 'vendor_inference'
-            elif 'samsung' in vendor.lower():
+            elif 'samsung' in vendor.lower() and not result['device_type']:
                 result['operating_system'] = 'Android'
-                result['device_type'] = 'Phone'
-                result['confidence'] = 'medium'
+                if not result['hostname_override']:
+                    result['device_type'] = 'Phone'
+                if result['confidence'] == 'low':
+                    result['confidence'] = 'medium'
                 result['method'] = 'vendor_inference'
         
         return result
