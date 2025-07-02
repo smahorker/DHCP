@@ -22,25 +22,14 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Virtual Environment
-network_monitoring_env/
-venv/
-env/
-ENV/
-
 # Environment variables
 .env
-.env.local
-.env.production
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Logs
-*.log
-logs/
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # IDE
 .vscode/
@@ -51,22 +40,17 @@ logs/
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # Project specific
-.claude/
-docs/
-
-# Docker
-docker-compose.override.yml
-
-# Testing
-.coverage
-.pytest_cache/
-.tox/
-
-# Backup files
-*.bak
-*.backup
-*.orig
-*.tmp 
+results/*.json
+\!results/README.md
+*.log
+temp/
+cache/
+EOF < /dev/null

@@ -8,10 +8,10 @@ import json
 import sys
 import os
 from pathlib import Path
-sys.path.append('/mnt/c/Users/sripa/Downloads/Network/src/core')
+sys.path.append('..')
 
-from dhcp_log_parser import DHCPLogParser
-from fingerbank_api import DeviceFingerprint, FingerbankAPIClient
+from src.core.dhcp_log_parser import DHCPLogParser
+from src.core.fingerbank_api import DeviceFingerprint, FingerbankAPIClient
 
 def analyze_fingerbank_requests():
     """Analyze what data would be sent to Fingerbank for problematic cases."""
@@ -21,7 +21,7 @@ def analyze_fingerbank_requests():
     
     # Parse the test log to get actual DHCP entries
     parser = DHCPLogParser()
-    log_file = Path("test_logs/realistic_home_network.log")
+    log_file = Path("../test_logs/realistic_home_network.log")
     
     if not log_file.exists():
         print(f"Error: Test log file not found: {log_file}")

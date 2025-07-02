@@ -14,8 +14,8 @@ from datetime import datetime
 logging.basicConfig(level=logging.CRITICAL)
 logging.getLogger().setLevel(logging.CRITICAL)
 
-# Add current directory to path for imports
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Add parent directory to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
     from dhcp_device_analyzer import OptimizedDHCPDeviceAnalyzer
@@ -51,7 +51,7 @@ def export_json_results(devices, filename="test_results.json"):
     export_data = {
         'test_metadata': {
             'timestamp': datetime.now().isoformat(),
-            'dataset_file': 'test_logs/dataset.log',
+            'dataset_file': '../test_logs/dataset.log',
             'total_devices': len(json_devices),
             'analyzer_version': '3.0'
         },

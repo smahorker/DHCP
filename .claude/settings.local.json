@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(python run_tests.py:*)",
+      "Bash(python3:*)",
+      "Bash(pip3 install:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(ss:*)",
+      "Bash(touch:*)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)",
+      "Bash(docker run:*)",
+      "Bash(rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(python test:*)",
+      "WebFetch(domain:fingerbank.org)",
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(mv:*)",
+      "Bash(python:*)",
+      "Bash(jq:*)",
+      "Bash(cp:*)",
+      "Bash(git commit:*)"
+    ],
+    "deny": []
+  }
+}

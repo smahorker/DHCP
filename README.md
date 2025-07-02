@@ -47,10 +47,31 @@ python3 dhcp_device_analyzer.py /path/to/dhcp.log
 **Run tests:**
 ```bash
 # Test with realistic home router data
-python3 realistic_test.py
+python3 tests/realistic_test.py
 
 # Test with rich enterprise data  
-python3 simple_test.py
+python3 tests/simple_test.py
+```
+
+## Project Structure
+
+```
+Network/
+├── dhcp_device_analyzer.py    # Main classification engine
+├── enhanced_classifier.py     # Local fallback classifier
+├── requirements.txt           # Python dependencies
+├── README.md                 # This file
+├── src/                      # Core modules
+│   └── core/
+│       ├── dhcp_log_parser.py
+│       ├── fingerbank_api.py
+│       ├── mac_vendor_lookup.py
+│       └── oui_database.csv
+├── test_logs/               # Sample DHCP logs
+├── docs/                    # Documentation
+├── tests/                   # Test scripts
+├── tools/                   # Utility tools
+└── results/                 # Output files
 ```
 
 ## System Architecture
