@@ -29,7 +29,7 @@ def analyze_realistic_dhcp_logs():
     analyzer = OptimizedDHCPDeviceAnalyzer(fingerbank_api_key=api_key)
     
     # Test with realistic home network log
-    log_file = Path("../test_logs/realistic_home_network.log")
+    log_file = Path("test_logs/realistic_home_network.log")
     
     if not log_file.exists():
         print(f"Error: Test log file not found: {log_file}")

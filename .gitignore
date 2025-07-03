@@ -16,20 +16,19 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
 
-# Environment variables
-.env
-.venv
-env/
+# Virtual environments
 venv/
+env/
 ENV/
-env.bak/
-venv.bak/
+.venv/
+.env/
 
 # IDE
 .vscode/
@@ -38,7 +37,20 @@ venv.bak/
 *.swo
 *~
 
-# OS
+# Results and logs
+results/
+results_*.json
+*_results.json
+debug_*.py
+temp_*.py
+
+# API keys and secrets
+.env
+config.ini
+secrets.json
+*.key
+
+# OS generated files
 .DS_Store
 .DS_Store?
 ._*
@@ -47,10 +59,20 @@ venv.bak/
 ehthumbs.db
 Thumbs.db
 
-# Project specific
-results/*.json
-\!results/README.md
+# Temporary files
+*.tmp
+*.temp
 *.log
-temp/
-cache/
-EOF < /dev/null
+!test_logs/*.log
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Documentation builds
+docs/_build/

@@ -197,69 +197,49 @@ class DHCPLogParser:
     def _build_oui_vendor_class_map(self) -> Dict[str, str]:
         """Build OUI-to-vendor-class mapping for enhanced Fingerbank accuracy."""
         return {
-            # Samsung Android devices
+            # Samsung devices (primarily Android phones)
             '28:39:5e': 'android-dhcp-14',
-            'e8:50:8b': 'android-dhcp-13', 
-            'dc:a6:32': 'android-dhcp-14',
-            '34:2e:b6': 'android-dhcp-13',
-            '68:64:4b': 'android-dhcp-14',
+            '50:32:75': 'android-dhcp-13',
             
-            # Apple devices - use Microsoft DHCP client stack
-            '88:66:5a': 'MSFT 5.0',
-            'f0:18:98': 'MSFT 5.0',
-            'd4:6d:6d': 'MSFT 5.0',
-            '8c:85:90': 'MSFT 5.0',
-            '98:01:a7': 'MSFT 5.0',
-            '3c:07:54': 'MSFT 5.0',
-            'a8:60:b6': 'MSFT 5.0',
-            'ac:de:48': 'MSFT 5.0',
+            # Apple devices (iOS/macOS specific DHCP clients)
+            '88:66:5a': 'Apple',  # iPhone/iPad use Apple-specific DHCP
+            'f0:18:98': 'Apple',  # Apple devices
+            '8c:85:90': 'Apple',  # Apple devices
+            '98:01:a7': 'MSFT 5.0',  # When used in Windows context
             
-            # Intel NICs (often in Android devices/laptops)
-            'a4:c3:f0': 'android-dhcp-13',  # Often Intel Android
-            'd4:6d:6d': 'MSFT 5.0',         # Intel in Apple devices
-            'a0:88:b4': 'android-dhcp-12',  # Intel Android tablets
+            # Intel NICs (context-dependent - used in many devices)
+            'a4:c3:f0': 'android-dhcp-13',  # Intel in Android devices
+            'd4:6d:6d': 'dhcpcd',  # Intel NICs often use dhcpcd in Unix/Linux
+            'a0:88:b4': 'android-dhcp-12',  # Intel in tablets
             
             # Dell devices (typically Windows)
             '34:17:eb': 'MSFT 5.0',
             '00:1e:c9': 'MSFT 5.0',
-            '54:ee:75': 'MSFT 5.0',
             
-            # IoT and Embedded devices
-            '2c:f0:5d': 'espressif',        # ESP32/ESP8266 devices
-            'cc:50:e3': 'espressif',        # ESP32
-            '30:ae:a4': 'espressif',        # ESP8266
-            'dc:a6:32': 'linux-dhcp',       # Raspberry Pi (when not Android)
-            'b8:27:eb': 'linux-dhcp',       # Raspberry Pi Foundation
+            # Raspberry Pi (uses dhcpcd by default)
+            'dc:a6:32': 'dhcpcd',
+            'b8:27:eb': 'dhcpcd',
             
-            # Network equipment vendors
+            # Network equipment vendors (use lightweight DHCP clients)
             'e8:48:b8': 'udhcp',            # TP-Link
-            '6c:72:20': 'busybox-dhcp',     # D-Link
+            '6c:72:20': 'udhcp',            # D-Link  
             '58:8b:f3': 'busybox-dhcp',     # Zyxel
-            'c0:56:27': 'busybox-dhcp',     # Belkin
-            '70:85:c2': 'udhcp',            # ASRock
+            'c0:56:27': 'udhcp',            # Belkin (but also used by gaming consoles)
             
-            # Gaming consoles
-            'c0:56:27': 'Sony-PS5',         # PlayStation 5 (Belkin OUI used by Sony)
-            '00:50:c2': 'Microsoft-Xbox',   # Xbox consoles
-            '98:b6:e9': 'Nintendo-Switch',  # Nintendo Switch
+            # PC component manufacturers (when used in embedded systems)
+            'b4:2e:99': 'udhcp',            # GIGA-BYTE (often embedded)
+            '2c:f0:5d': 'udhcp',            # Micro-Star (often embedded) 
+            '70:85:c2': 'udhcp',            # ASRock (often embedded)
             
             # Xiaomi devices
-            '48:2c:a0': 'android-dhcp-13',  # Xiaomi phones
+            '48:2c:a0': 'android-dhcp-13',  # Xiaomi phones/devices
             '4c:49:e3': 'android-dhcp-12',  # Xiaomi IoT
-            '34:ce:00': 'android-dhcp-14',  # Xiaomi
             
-            # Google devices
-            '94:de:80': 'dhcpcd',           # Google Chromecast (uses dhcpcd)
-            'f8:8f:ca': 'dhcpcd',           # Google Nest devices
+            # Google/Chromecast devices
+            '94:de:80': 'dhcpcd',           # Google Chromecast
             
             # VMware virtual devices
-            '00:50:56': 'linux-dhcp',       # VMware virtual machines
-            '00:0c:29': 'linux-dhcp',       # VMware
-            '00:05:69': 'linux-dhcp',       # VMware
-            
-            # Common Windows OEMs
-            'b4:2e:99': 'MSFT 5.0',         # GIGA-BYTE (Windows PCs)
-            '2c:f0:5d': 'MSFT 5.0',         # Micro-Star (Windows PCs)
+            '00:50:56': 'dhcpcd',           # VMware VMs (Linux)
         }
     
     def _get_vendor_class_from_oui(self, mac_address: str) -> Optional[str]:
@@ -509,16 +489,38 @@ class DHCPLogParser:
                 if hostname and not dhcp_options.get('option_12'):
                     dhcp_options['option_12'] = hostname
                 
+                # DIAGNOSTIC LOG: DHCP data quality assessment
+                logger.debug(f"DIAGNOSTIC [{mac_address}]: DHCP log parsing:")
+                logger.debug(f"  - Raw log line: {line[:100]}...")
+                logger.debug(f"  - Extracted hostname: {hostname}")
+                logger.debug(f"  - DHCP options found: {len(dhcp_options)}")
+                logger.debug(f"  - Key options: {list(dhcp_options.keys())}")
+                if not dhcp_options.get('option_55'):
+                    logger.warning(f"DIAGNOSTIC [{mac_address}]: Missing DHCP fingerprint (option 55) - primary Fingerbank signal")
+                if not dhcp_options.get('option_60'):
+                    logger.warning(f"DIAGNOSTIC [{mac_address}]: Missing vendor class (option 60) - secondary Fingerbank signal")
+                
                 # Extract enhanced DHCP fingerprint data for Fingerbank
                 dhcp_fingerprint = dhcp_options.get('option_55')  # Parameter Request List (critical)
                 client_fqdn = dhcp_options.get('option_81')  # Client FQDN
                 vendor_class = dhcp_options.get('option_60')  # Vendor Class (critical)
                 
                 # OUI-based vendor class fallback when not explicitly provided
+                # This simulates realistic DHCP behavior based on device type and manufacturer
                 if not vendor_class:
                     vendor_class = self._get_vendor_class_from_oui(mac_address)
                     if vendor_class:
                         dhcp_options['option_60'] = vendor_class  # Store for consistency
+                
+                # DIAGNOSTIC LOG: Final DHCP data summary
+                data_quality_score = 0
+                if hostname: data_quality_score += 30
+                if vendor_class: data_quality_score += 40
+                if dhcp_fingerprint: data_quality_score += 30
+                
+                logger.debug(f"DIAGNOSTIC [{mac_address}]: Data quality score: {data_quality_score}/100")
+                if data_quality_score < 50:
+                    logger.warning(f"DIAGNOSTIC [{mac_address}]: Low data quality - expect reduced classification accuracy")
                 
                 user_class = dhcp_options.get('option_77')  # User Class (Windows domain)
                 client_arch = dhcp_options.get('option_93')  # Client Architecture
@@ -549,7 +551,7 @@ class DHCPLogParser:
         
         # If no pattern matched, log as skipped
         self.skipped_count += 1
-        logger.debug(f"Skipped unparseable log line: {line[:100]}...")
+        logger.warning(f"DIAGNOSTIC: Failed to parse log line - no pattern matched: {line[:100]}...")
         return None
     
     def parse_log_content(self, log_content: str) -> List[DHCPLogEntry]:

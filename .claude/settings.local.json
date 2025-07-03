@@ -24,7 +24,8 @@
       "Bash(jq:*)",
       "Bash(cp:*)",
       "Bash(git commit:*)",
-      "Bash(/dev/null)"
+      "Bash(/dev/null)",
+      "Bash(PYTHONPATH=/mnt/c/Users/sripa/Downloads/Network python3 tests/realistic_test.py)"
     ],
     "deny": []
   }

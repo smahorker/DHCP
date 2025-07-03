@@ -1,0 +1,34 @@
+# Realistic Home Router DHCP Log - TP-Link Archer A7
+# Common home network scenario with minimal DHCP data
+# Most home routers provide very limited DHCP option information
+
+Dec 25 08:15:23 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.101 for MAC 28:39:5e:f1:65:c1
+Dec 25 08:15:45 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.102 for MAC a4:c3:f0:85:ac:2d hostname android-dhcp-13
+Dec 25 08:16:12 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.103 for MAC 88:66:5a:12:34:56 hostname iPhone
+Dec 25 08:17:33 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.104 for MAC 34:17:eb:aa:bb:cc
+Dec 25 08:18:45 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.105 for MAC 98:01:a7:dd:ee:ff hostname DESKTOP-ABC123
+Dec 25 08:20:12 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.106 for MAC d4:6d:6d:11:22:33 hostname MacBook-Pro
+Dec 25 08:21:34 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.107 for MAC b4:2e:99:44:55:66
+Dec 25 08:22:15 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.108 for MAC 2c:f0:5d:77:88:99 hostname ESP_123456
+Dec 25 08:23:45 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.109 for MAC dc:a6:32:aa:bb:cc hostname Galaxy-S24
+Dec 25 08:24:12 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.110 for MAC 50:32:75:dd:ee:ff hostname Ring-Camera-1
+Dec 25 08:25:33 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.111 for MAC e8:48:b8:11:22:33
+Dec 25 08:26:45 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.112 for MAC 94:de:80:44:55:66 hostname Chromecast
+Dec 25 08:27:12 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.113 for MAC 00:50:56:77:88:99 hostname raspberrypi
+Dec 25 08:28:34 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.114 for MAC 6c:72:20:aa:bb:cc hostname NETGEAR-1234
+Dec 25 08:29:15 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.115 for MAC 58:8b:f3:dd:ee:ff
+Dec 25 08:30:45 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.116 for MAC c0:56:27:11:22:33 hostname PS5-Console
+Dec 25 08:31:12 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.117 for MAC 48:2c:a0:44:55:66 hostname FireTV-Stick
+Dec 25 08:32:33 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.118 for MAC 00:1e:c9:77:88:99 hostname HP-Printer
+Dec 25 08:33:45 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.119 for MAC f0:18:98:aa:bb:cc hostname Nest-Thermostat
+Dec 25 08:34:12 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.120 for MAC 70:85:c2:dd:ee:ff hostname SMART-TV-LG
+
+# Later in the day - some devices reconnecting with minimal data
+Dec 25 14:15:23 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.101 for MAC 28:39:5e:f1:65:c1
+Dec 25 14:16:45 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.102 for MAC a4:c3:f0:85:ac:2d
+Dec 25 14:18:12 192.168.1.1 dhcp: DHCP-ACK sent to 192.168.1.104 for MAC 34:17:eb:aa:bb:cc hostname Unknown-Device
+
+# Very minimal logs (common in cheaper routers)
+Dec 25 20:15:23 192.168.1.1 dhcp assigned 192.168.1.121 to 4c:49:e3:11:22:33
+Dec 25 20:16:45 192.168.1.1 dhcp assigned 192.168.1.122 to 8c:85:90:44:55:66
+Dec 25 20:18:12 192.168.1.1 dhcp assigned 192.168.1.123 to a0:88:b4:77:88:99

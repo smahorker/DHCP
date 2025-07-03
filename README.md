@@ -35,16 +35,19 @@ A sophisticated network device monitoring system that passively identifies devic
 
 ### Basic Usage
 
-**Analyze DHCP logs:**
+**Quick start (uses example data):**
 ```bash
-python3 analyze.py
-# or specify a custom log file
-python3 -c "
-from src.core.dhcp_device_analyzer import OptimizedDHCPDeviceAnalyzer
-analyzer = OptimizedDHCPDeviceAnalyzer()
-results = analyzer.analyze_dhcp_log('path/to/your/dhcp.log')
-analyzer.export_results(results, 'output.json')
-"
+python3 main.py
+```
+
+**Analyze custom DHCP logs:**
+```bash
+python3 main.py --log /path/to/your/dhcp.log --api-key YOUR_KEY
+```
+
+**Run example analysis:**
+```bash
+python3 examples/analyze_dhcp_log.py
 ```
 
 **Run tests:**

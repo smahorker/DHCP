@@ -390,6 +390,13 @@ class FingerbankAPIClient:
     def _determine_device_type(self, device_name: str, device_hierarchy: List[str], manufacturer: str) -> Optional[str]:
         """Enhanced device type determination using full Fingerbank hierarchy analysis."""
         
+        # NEW: Handle "Hardware Manufacturer" responses first
+        if device_hierarchy and 'hardware manufacturer' in ' '.join(device_hierarchy).lower():
+            hardware_type = self._classify_hardware_manufacturer(manufacturer, device_name)
+            if hardware_type:
+                logger.debug(f"Hardware manufacturer classification: {manufacturer} -> {hardware_type}")
+                return hardware_type
+        
         # Combine all available text for comprehensive analysis
         full_text = ' '.join(filter(None, [device_name, manufacturer] + (device_hierarchy or []))).lower()
         
@@ -535,6 +542,50 @@ class FingerbankAPIClient:
                 return 'Gaming Console'
             elif any(network_mfg in manufacturer_lower for network_mfg in ['cisco', 'netgear', 'linksys']):
                 return 'Network Device'
+        
+        return None
+    
+    def _classify_hardware_manufacturer(self, manufacturer: str, device_name: str) -> Optional[str]:
+        """Classify devices with 'Hardware Manufacturer' hierarchy using vendor knowledge."""
+        if not manufacturer:
+            return None
+            
+        manufacturer_lower = manufacturer.lower()
+        
+        # Network Equipment OEMs (expanded list)
+        networking_oems = [
+            'tp-link', 'netgear', 'd-link', 'asus', 'linksys', 'zyxel', 'ubiquiti',
+            'belkin', 'tenda', 'mikrotik', 'fortinet', 'aruba', 'juniper',
+            'cisco', 'hewlett packard enterprise', 'extreme networks'
+        ]
+        
+        # PC Component Manufacturers (in embedded context)
+        hardware_oems = [
+            'asrock', 'msi', 'gigabyte', 'giga-byte', 'micro-star',
+            'intel', 'amd', 'nvidia', 'asus', 'evga', 'supermicro'
+        ]
+        
+        # Smart Home/IoT OEMs
+        iot_oems = [
+            'philips', 'amazon', 'google', 'ring', 'nest', 'wyze',
+            'arlo', 'eufy', 'blink', 'ecobee', 'honeywell', 'lutron'
+        ]
+        
+        # Consumer Electronics Manufacturers
+        electronics_oems = [
+            'sony', 'lg', 'samsung', 'panasonic', 'sharp', 'tcl',
+            'roku', 'nvidia', 'amazon', 'apple', 'microsoft'
+        ]
+        
+        # Classification logic with confidence scoring
+        if any(net in manufacturer_lower for net in networking_oems):
+            return 'Network Device'
+        elif any(hw in manufacturer_lower for hw in hardware_oems):
+            return 'Computer'  # Often embedded systems/mini PCs
+        elif any(iot in manufacturer_lower for iot in iot_oems):
+            return 'IoT Device'
+        elif any(elec in manufacturer_lower for elec in electronics_oems):
+            return 'Smart TV'  # Most common for consumer electronics
         
         return None
     
