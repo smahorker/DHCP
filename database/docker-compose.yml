@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: network_devices_db
+    environment:
+      POSTGRES_DB: network_devices
+      POSTGRES_USER: network_admin
+      POSTGRES_PASSWORD: secure_password_123
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./init-data.sql:/docker-entrypoint-initdb.d/02-init-data.sql:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U network_admin -d network_devices"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - network_devices_net
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: network_devices_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@networkdevices.local
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - network_devices_net
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  network_devices_net:
+    driver: bridge
